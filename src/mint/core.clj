@@ -17,6 +17,13 @@
     (and (valid_exchange_number? (exchange 0) path)
          (change_adds_up? denoms price path))))
 
+(defn valid_exchanges? [data]
+  let [prices (range 1 99)
+       exchanges (data "exchanges")
+       denoms (data "denoms")]
+       ;
+       (every? valid_exchange? (repeat denoms) prices exchanges))
+
 (defn wf_denoms? [data]
   (let [denoms (get data "denominations")]
     (and (vector? denoms) (= (count denoms) 5) (every? integer? denoms))))
