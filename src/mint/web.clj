@@ -1,5 +1,6 @@
 (ns mint.web
-  (:use compojure.core)
+  (:use compojure.core
+        ring.adapter.jetty)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]))
 
