@@ -33,6 +33,6 @@ end
 
 data = {"denominations" => denominations, "exchanges" => exchanges}
 require 'pp'
-File.open("sample_data.json", 'w') do |f|
+File.open("resources/public/sample_data.json", 'w') do |f|
   f.puts data.to_json
 end
