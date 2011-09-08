@@ -23,6 +23,8 @@
     [:p "Your final solution file should output to stdout, but you can upload your output here to make sure it will be accepted."]]
     [:form {:action "/" :method "post" :enctype "multipart/form-data"} 
        (file-upload "output")
+       [:p [:label "Pick a value for N:"]
+           [:input {:type "number" :name "multiple" :value 1}]]
        (submit-button "submit")]))
 
 (defn response-template [results] 
@@ -41,16 +43,16 @@
       [:p "Your exchanges were valid."])
     [:p "Your score is: " (results :score)] ))
 
-(defn response-page [upload]
+(defn response-page [upload multiple]
   (let [output-data (try 
                       (json/decode (slurp (upload :tempfile)))
                       (catch Exception e {:error "Maybe this wasn't a json document?"}))]
-    (response-template (core/process_output output-data 1))))
+    (response-template (core/process_output output-data (Integer/parseInt multiple)))))
 
 (defroutes main-routes
   (GET "/" [] index-page)
   (mp/wrap-multipart-params
-    (POST "/" [output] (response-page output)))
+    (POST "/" [output multiple] (response-page output multiple)))
   (route/resources "/") ;maps to the public/ directory
   (route/not-found "Page not found"))
 

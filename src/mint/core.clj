@@ -40,7 +40,7 @@
       n))
 
 (defn total_score [data n]
-   (reduce + (map score prices (data :exchanges (repeat n)))))
+   (reduce + (map score prices (data :exchanges) (repeat n))))
 
 (defn process_output [data n]
   (let [well_formed (well_formed? data)
