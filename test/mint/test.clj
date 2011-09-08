@@ -35,3 +35,6 @@
   (is (false? (valid_exchange? [1,2,3,4,5] 87 [-2,[0,1,0,0,-3]])))
   (is (false? (valid_exchange? [1,2,3,4,5] 97 [1,[2,0,0,0,-1]]))))
 
+(deftest score_test
+  (is (score 1 2 4) 2)
+  (is (score 5 2 4) 20))
