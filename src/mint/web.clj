@@ -19,7 +19,7 @@
     [:h3 "An Output Validator"]
     [:p "A sample output file can be seen " [:a {:href "/sample_output.json"} "here"] "." ]
     [:p "It consists of a JSON document with an array of coin denominations and an array of 99 exchanges," [:br]
-        " each in the form [exchange_number, [n_pennies, n_nickels, n_dimes, n_quarters, n_half_dollars]]"]
+        " each in the form [n_pennies, n_nickels, n_dimes, n_quarters, n_half_dollars]"]
     [:p "Your final solution file should output to stdout, but you can upload your output here to make sure it will be accepted."]]
     [:form {:action "/" :method "post" :enctype "multipart/form-data"} 
        (file-upload "output")
@@ -36,8 +36,8 @@
       [:p "Your results were not formatted correctly.  Try looking at " [:a {:href "/sample_output.json"} "the sample data"] " for a guide" ]
       [:p "Your results were formatted correctly."])
       ]
-    (if (and (results :well-formed) (false? (results :valid)))
-      [:p "Your exchanges were not valid.  Either your exchange numbers were calculated wrong, or the paths did not add up to the correct prices."]
+    (if (false? (results :valid))
+      [:p "Your exchanges were not valid.  Make sure the combination of the number of coins and the denominations of the coins add up to the correct prices."]
       [:p "Your exchanges were valid."])
     [:p "Your score is: " (results :score)] ))
 

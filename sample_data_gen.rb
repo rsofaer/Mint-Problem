@@ -28,11 +28,10 @@ exchanges = prices.map do |price|
     path = pos_path; exch_num = pos_exch_num
   end
 
-  [exch_num, path.reverse]
+  path.reverse
 end
 
 data = {"denominations" => denominations, "exchanges" => exchanges}
-require 'pp'
-File.open("resources/public/sample_data.json", 'w') do |f|
+File.open("resources/public/sample_output.json", 'w') do |f|
   f.puts data.to_json
 end
