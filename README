@@ -1,0 +1,7 @@
+Validator and scorer for the first problem, the Mint Problem, in Heuristic Problem solving Fall 2011.
+
+Sample solution output is viewable in sample_data.json.
+Solutions must be runnable on the energon server accessible through your CIMS account,
+               take N as an argument,
+               run in 2 minutes,
+           and output a JSON document of the format viewable in sample_data.json to their STDOUT.
