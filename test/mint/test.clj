@@ -3,15 +3,15 @@
   (:use [clojure.test]))
 
 (deftest wf_denoms_test
-  (is (wf_denoms? {"denominations" [1,2,3,4,5]}))
-  (is (false? (wf_denoms? {"denominations" [1,2,3,4]})))
-  (is (false? (wf_denoms? {"denominations" [1,2,3,4,5,6]})))
-  (is (false? (wf_denoms? {"denominations" [1,2,3,4,"hey"]})))
-  (is (false? (wf_denoms? {"denominations" "what"}))))
+  (is (wf_denoms? {:denominations [1,2,3,4,5]}))
+  (is (false? (wf_denoms? {:denominations [1,2,3,4]})))
+  (is (false? (wf_denoms? {:denominations [1,2,3,4,5,6]})))
+  (is (false? (wf_denoms? {:denominations [1,2,3,4,"hey"]})))
+  (is (false? (wf_denoms? {:denominations "what"}))))
 
 (deftest wf_exchanges_test
-  (is (wf_exchanges? {"exchanges" (vec (repeat 99 [1,[1,2,3,4,5]]))}))
-  (is (false? (wf_exchanges? {"exchanges" (vec (repeat 98 [1,[1,2,3,4,5]]))}))))
+  (is (wf_exchanges? {:exchanges (vec (repeat 99 [1,[1,2,3,4,5]]))}))
+  (is (false? (wf_exchanges? {:exchanges (vec (repeat 98 [1,[1,2,3,4,5]]))}))))
 
 (deftest wf_exchange_test
   (is (wf_exchange? [1,[1,0,0,0,0]]))

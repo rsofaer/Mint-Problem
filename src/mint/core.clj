@@ -1,11 +1,10 @@
 (ns mint.core
-  (:use org.danlarkin.json)
   (:use clojure.contrib.math))
 
-(defn prices [] (range 1 99))
+(def prices (range 1 99))
 
 (defn wf_denoms? [data]
-  (let [denoms (data "denominations")]
+  (let [denoms (data :denominations)]
     (and (vector? denoms) (= (count denoms) 5) (every? integer? denoms))))
 
 (defn wf_exchange? [e]
@@ -16,7 +15,7 @@
          (and (= (count path) 5) (every? integer? path)))))
 
 (defn wf_exchanges? [data]
-  (let [exchs (data "exchanges")]
+  (let [exchs (data :exchanges)]
     (and (vector? exchs) 
          (= (count exchs) 99) 
          (every? wf_exchange? exchs))))
@@ -38,7 +37,7 @@
          (change_adds_up? denoms price path))))
 
 (defn valid_exchanges? [data]
-  (every? valid_exchange? (repeat (data "denoms")) prices (data "exchanges")))
+  (every? true?(map valid_exchange? (repeat (data :denominations)) prices (data :exchanges))))
 
 ; Score is sum of the costs of all non-multiples of 5 + sum of N * costs of the multiples of 5. 
 ; For example, if the cost of every entry were 2. 
@@ -49,6 +48,11 @@
       n))
 
 (defn total_score [data n]
-  (let [exchange_nums (map get (data "exchanges") (repeat 0))]
+  (let [exchange_nums (map get (data :exchanges) (repeat 0))]
     (reduce + (map score prices exchange_nums (repeat n)))))
+
+(defn process_output [data n]
+  (let [well_formed (well_formed? data)
+        valid (valid_exchanges? data)]
+  {:well-formed well_formed :valid valid :score (if (and well_formed valid) (total_score data n) 0 )}))
 

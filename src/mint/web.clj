@@ -1,15 +1,60 @@
 (ns mint.web
   (:use compojure.core
-        ring.adapter.jetty)
+        ring.adapter.jetty
+        hiccup.core
+        hiccup.form-helpers)
   (:require [compojure.route :as route]
+            [mint.core :as core]
+            [org.danlarkin.json :as json]
+            [clojure.contrib.duck-streams :as ds]
+            [ring.middleware.multipart-params :as mp]
             [compojure.handler :as handler]))
 
-(defroutes main-routes
-  (GET "/" [] "<h1> Hello from Raphael!</h1>"))
-  ;(route/resources "/") ;maps to the public/ directory
-  ;(route/not-found "Page not found"))
+(defn index-page [req]
+  (html
+   [:head
+    [:title "The Mint Problem"]]
+   [:body
+    [:h1 "The Mint Problem" ]
+    [:h3 "An Output Validator"]
+    [:p "A sample output file can be seen " [:a {:href "/sample_output.json"} "here"] "." ]
+    [:p "It consists of a JSON document with an array of coin denominations and an array of 99 exchanges," [:br]
+        " each in the form [exchange_number, [n_pennies, n_nickels, n_dimes, n_quarters, n_half_dollars]]"]
+    [:p "Your final solution file should output to stdout, but you can upload your output here to make sure it will be accepted."]]
+    [:form {:action "/" :method "post" :enctype "multipart/form-data"} 
+       (file-upload "output")
+       (submit-button "submit")]))
 
-(defn app [req]
+(defn response-template [results] 
+  (html 
+    [:head 
+      [:title "The Mint Problem"]]
+    [:body
+     [:h1 "Your Results:"]
+
+    (if (false? (results :well-formed))
+      [:p "Your results were not formatted correctly.  Try looking at " [:a {:href "/sample_output.json"} "the sample data"] " for a guide" ]
+      [:p "Your results were formatted correctly."])
+      ]
+    (if (and (results :well-formed) (false? (results :valid)))
+      [:p "Your exchanges were not valid.  Either your exchange numbers were calculated wrong, or the paths did not add up to the correct prices."]
+      [:p "Your exchanges were valid."])
+    [:p "Your score is: " (results :score)] ))
+
+(defn response-page [upload]
+  (let [output-data (try 
+                      (json/decode (slurp (upload :tempfile)))
+                      (catch Exception e {:error "Maybe this wasn't a json document?"}))]
+    (response-template (core/process_output output-data 1))))
+
+(defroutes main-routes
+  (GET "/" [] index-page)
+  (mp/wrap-multipart-params
+    (POST "/" [output] (response-page output)))
+  (route/resources "/") ;maps to the public/ directory
+  (route/not-found "Page not found"))
+
+(def app
    (handler/site main-routes))
 
 (defn -main []
