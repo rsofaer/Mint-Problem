@@ -37,7 +37,7 @@
 (defn score [price exchange n]
   (if (= (rem price 5) 0)
       (* (abs_sum exchange) n)
-      n))
+      (abs_sum exchange)))
 
 (defn total_score [data n]
    (reduce + (map score prices (data :exchanges) (repeat n))))
