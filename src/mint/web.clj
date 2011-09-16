@@ -10,6 +10,13 @@
             [ring.middleware.multipart-params :as mp]
             [compojure.handler :as handler]))
 
+(let [m (.getDeclaredMethod clojure.lang.LispReader
+                            "matchNumber"
+                            (into-array [String]))]
+  (.setAccessible m true)
+  (defn parse-number [s]
+    (.invoke m clojure.lang.LispReader (into-array [s]))))
+
 (defn index-page [req]
   (html
    [:head
@@ -24,7 +31,7 @@
     [:form {:action "/" :method "post" :enctype "multipart/form-data"} 
        (file-upload "output")
        [:p [:label "Pick a value for N:"]
-           [:input {:type "number" :name "multiple" :value 1}]]
+           [:input {:type "number" :name "multiple" :value 1 :min 0.1 :step 0.1}]]
        (submit-button "submit")]))
 
 (defn response-template [results] 
@@ -47,7 +54,7 @@
   (let [output-data (try 
                       (json/decode (slurp (upload :tempfile)))
                       (catch Exception e {:error "Maybe this wasn't a json document?"}))]
-    (response-template (core/process_output output-data (Integer/parseInt multiple)))))
+    (response-template (core/process_output output-data (parse-number multiple)))))
 
 (defroutes main-routes
   (GET "/" [] index-page)

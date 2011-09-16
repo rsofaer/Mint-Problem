@@ -1,7 +1,7 @@
 (ns mint.core
   (:use clojure.contrib.math))
 
-(def prices (range 1 99))
+(def prices (range 1 100))
 
 (defn wf_denoms? [data]
   (let [denoms (data :denominations)]
@@ -35,6 +35,9 @@
 ; For example, if the cost of every entry were 2. 
 ; Then the total score would be (99-19)*2 + (19*N*2). 
 (defn score [price exchange n]
+  (println (str "Price: " price ", Score: " (if (= (rem price 5) 0)
+      (* (abs_sum exchange) n)
+      (abs_sum exchange))))
   (if (= (rem price 5) 0)
       (* (abs_sum exchange) n)
       (abs_sum exchange)))
