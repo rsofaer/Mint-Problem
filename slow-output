@@ -1,0 +1,3 @@
+#! /usr/bin/ruby
+sleep(10)
+puts File.read "resources/public/sample_output.json"

@@ -35,9 +35,6 @@
 ; For example, if the cost of every entry were 2. 
 ; Then the total score would be (99-19)*2 + (19*N*2). 
 (defn score [price exchange n]
-  (println (str "Price: " price ", Score: " (if (= (rem price 5) 0)
-      (* (abs_sum exchange) n)
-      (abs_sum exchange))))
   (if (= (rem price 5) 0)
       (* (abs_sum exchange) n)
       (abs_sum exchange)))
@@ -50,3 +47,9 @@
         valid (and well_formed (valid_exchanges? data))]
       {:well-formed well_formed :valid valid :score (if (and well_formed valid) (total_score data n) 0 )}))
 
+(let [m (.getDeclaredMethod clojure.lang.LispReader
+                            "matchNumber"
+                            (into-array [String]))]
+  (.setAccessible m true)
+  (defn parse-number [s]
+    (.invoke m clojure.lang.LispReader (into-array [s]))))

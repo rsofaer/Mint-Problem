@@ -1,5 +1,6 @@
 (ns mint.test
   (:use [mint.core])
+  (:use [mint.cli])
   (:use [clojure.test]))
 
 (deftest wf_denoms_test
@@ -37,3 +38,17 @@
 (deftest score_test
   (is (score 1 [1,0,0,0,1] 4) 2)
   (is (score 5 [1,0,0,0,1] 4) 20))
+
+(defn dirname [path]
+  (.getParent (java.io.File. path)))
+
+(defn expand-path [path]
+  (.getCanonicalPath (java.io.File. path)))
+
+(def file-dir (expand-path (dirname *file*)))
+
+(deftest process-file-test
+  (is (= 275 (:score (process-file 1 "./insta-output"))))
+  (is (= 275 (:score (process-file 1 "./slow-output"))))
+  (is (= 0 (:score (process-file 1 "./glacial-output")))))
+

@@ -10,13 +10,6 @@
             [ring.middleware.multipart-params :as mp]
             [compojure.handler :as handler]))
 
-(let [m (.getDeclaredMethod clojure.lang.LispReader
-                            "matchNumber"
-                            (into-array [String]))]
-  (.setAccessible m true)
-  (defn parse-number [s]
-    (.invoke m clojure.lang.LispReader (into-array [s]))))
-
 (defn index-page [req]
   (html
    [:head
@@ -51,10 +44,8 @@
     [:p "Your score is: " (results :score)] ))
 
 (defn response-page [upload multiple]
-  (let [output-data (try 
-                      (json/decode (slurp (upload :tempfile)))
-                      (catch Exception e {:error "Maybe this wasn't a json document?"}))]
-    (response-template (core/process_output output-data (parse-number multiple)))))
+  (let [output-data (json/decode (slurp (upload :tempfile)))]
+    (response-template (core/process_output output-data (core/parse-number multiple)))))
 
 (defroutes main-routes
   (GET "/" [] index-page)

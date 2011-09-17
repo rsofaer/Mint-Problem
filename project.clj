@@ -7,5 +7,6 @@
      [hiccup "0.3.6"]
      [org.danlarkin/clojure-json "1.2-SNAPSHOT"]]
   :dev-dependencies [[lein-ring "0.4.5"]]
-  :ring {:handler mint.web/app})
+  :ring {:handler mint.web/app}
+  :main mint.cli)
 
