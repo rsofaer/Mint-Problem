@@ -19,7 +19,7 @@
          (every? wf_exchange? exchs))))
 
 (defn well_formed? [data]
-   (and (wf_denoms? data) (wf_exchanges? data)))
+   (and (not (or (nil? data) (= "" data))) (wf_denoms? data) (wf_exchanges? data)))
 
 (defn abs_sum [coll]
   (reduce + (map abs coll)))

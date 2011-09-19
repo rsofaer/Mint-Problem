@@ -22,6 +22,9 @@
   (is (false? (wf_exchange? [1,0])))
   (is (false? (wf_exchange? [0,0,-1,0,0,0]))))
 
+(deftest wf-test
+  (is (false? (well_formed? nil))))
+
 (deftest valid_exchange_test
   (is (valid_exchange? [1,2,3,4,5] 12 [0, 1,0,0,2 ]))
   (is (valid_exchange? [1,2,3,4,5] 15 [0, 0,0,0,3 ]))
