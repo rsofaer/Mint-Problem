@@ -26,7 +26,7 @@
 
 (defn valid_exchange? [denoms price exchange]
   (let [sum (reduce + (map * denoms exchange))]
-    (= (rem (+ 100 sum) 100) price))) ; the sum of the exchange + 100 mod 100 should be the price
+    (= (rem (+ 1000 sum) 100) price))) ; the sum of the exchange + 100 mod 100 should be the price
 
 (defn valid_exchanges? [data]
   (every? true?(map valid_exchange? (repeat (data :denominations)) prices (data :exchanges))))
